@@ -11,6 +11,11 @@
   div {
     margin-top: 10px;
   }
+  #log {
+    height: 60px;
+    width: 350px;
+    resize: none;
+  }
 </style>
 <div>
   <label>From: </label>
@@ -39,6 +44,9 @@
       <option value="CNY">CNY</option>
   </select>
 </div>
+
+<div>Last system calls: </div>
+<textarea id="log" readonly></textarea>
 
 <script src="options.js"></script>
 </body>

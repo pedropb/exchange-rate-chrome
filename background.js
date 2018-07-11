@@ -11,6 +11,11 @@ chrome.runtime.onInstalled.addListener(function() {
   }
 
   function updateBadge () {
+    var log = "";
+    chrome.storage.local.set({
+      log: log,
+    });
+
     chrome.storage.sync.get({
       currencyFrom: "CAD",
       currencyTo: "BRL"
@@ -24,18 +29,35 @@ chrome.runtime.onInstalled.addListener(function() {
       var xhr = new XMLHttpRequest();
       xhr.open("GET", API_ENDPOINT + query, true);
       xhr.onreadystatechange = function(data){
-          if (xhr.readyState == 4) {
-            try {
-              var value = JSON.parse(data.target.responseText)[query];
-              chrome.browserAction.setBadgeText({ text: value.toFixed(2).toString() });
-            }
-            catch (ex) {
-              chrome.browserAction.setBadgeText({ text: "Err" });
-            }
-            chrome.browserAction.setTitle({ title: getTitle(from, to) });
+        if (xhr.readyState == 4) {
+          log += "\nResponse received.";
+          chrome.storage.local.set({
+            log: log,
+          });
+
+          try {
+            var value = JSON.parse(data.target.responseText)[query];
+            chrome.browserAction.setBadgeText({ text: value.toFixed(2).toString() });
+
+            log += "\nValue: " + value;
+            chrome.storage.local.set({
+              log: log,
+            });
           }
+          catch (ex) {
+            chrome.browserAction.setBadgeText({ text: "Err" });
+            log += "\nError parsing the response: " + ex.name + " - " + ex.message;
+            chrome.storage.local.set({
+              log: log,
+            });
+          }
+          chrome.browserAction.setTitle({ title: getTitle(from, to) });
         }
-      xhr.send();
+      }
+      log = "Checking exchange rate from " + from + " to " + to + "\nSending request...";
+      chrome.storage.local.set({
+        log: log,
+      }, function () { xhr.send(); });
     });
   };
   updateBadge();
@@ -52,6 +74,9 @@ chrome.runtime.onInstalled.addListener(function() {
   chrome.storage.onChanged.addListener(function (changes, areaName) {
     if (areaName === "sync" && (changes.currencyFrom || changes.currencyTo)) {
       updateBadge();
+    }
+    if (areaName === "local" && changes.log && document.getElementById("log")) {
+      document.getElementById("log").value = changes.log.newValue;
     }
   });
 
