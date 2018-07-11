@@ -40,17 +40,23 @@ chrome.runtime.onInstalled.addListener(function() {
   };
   updateBadge();
 
+  // Alarm for updating exchange rate every 1 minute
   chrome.alarms.create(ALARM_NAME, {periodInMinutes: 1});
-
   chrome.alarms.onAlarm.addListener(function(alarm) {
     if (alarm.name === ALARM_NAME) {
       updateBadge();
     }
   });
 
+  // Change storage event to trigger update with new exchange rate
   chrome.storage.onChanged.addListener(function (changes, areaName) {
     if (areaName === "sync" && (changes.currencyFrom || changes.currencyTo)) {
       updateBadge();
     }
+  });
+
+  // Click event on the extension to show options page
+  chrome.browserAction.onClicked.addListener(function() {
+    chrome.runtime.openOptionsPage();
   });
 });
