@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Exchange Rate",
   "short_name": "ExchangeRate",
-  "version": "1.0",
+  "version": "1.0.1",
   "description": "Check exchange rate on your toolbar while browsing the web!",
   "author": "Pedro Baracho",
   "icons": {
