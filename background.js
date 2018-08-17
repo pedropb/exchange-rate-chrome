@@ -38,7 +38,7 @@ function updateBadge () {
           var value = JSON.parse(data.target.responseText)[query];
           chrome.browserAction.setBadgeText({ text: value.toFixed(2).toString() });
 
-          log += "\nValue: " + value;
+          log += "\n1 " + from + " = " + value + " " + to;
           chrome.storage.local.set({
             log: log,
           });
@@ -53,7 +53,9 @@ function updateBadge () {
         chrome.browserAction.setTitle({ title: getTitle(from, to) });
       }
     }
-    log = "Checking exchange rate from " + from + " to " + to + "\nSending request...";
+    var now = new Date;
+    log = now.toLocaleDateString() + " - " + now.toLocaleTimeString() + "\n" +
+      "Checking exchange rate from " + from + " to " + to + "\nSending request...";
     chrome.storage.local.set({
       log: log,
     }, function () { xhr.send(); });
@@ -75,14 +77,10 @@ chrome.browserAction.onClicked.addListener(function() {
   chrome.runtime.openOptionsPage();
 });
 
+setInterval(function () {
+  updateBadge();
+}, 60*1000);
+
 chrome.runtime.onInstalled.addListener(function() {
   updateBadge();
-
-  // Alarm for updating exchange rate every 1 minute
-  chrome.alarms.create(ALARM_NAME, {periodInMinutes: 1});
-  chrome.alarms.onAlarm.addListener(function(alarm) {
-    if (alarm.name === ALARM_NAME) {
-      updateBadge();
-    }
-  });
 });
