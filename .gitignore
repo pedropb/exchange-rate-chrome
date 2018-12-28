@@ -1,3 +1,6 @@
+.DS_Store
+*.min.*
+
 # Logs
 logs
 *.log
