@@ -65,7 +65,7 @@ function updateBadge () {
         }
         catch (ex) {
           chrome.browserAction.setBadgeText({ text: "Err" });
-          log += "\nError parsing the response: " + ex.name + " - " + ex.message;
+          log += "\nUnexpected response: " + data.target.responseText;
           chrome.storage.local.set({
             log: log,
           });
