@@ -1,5 +1,5 @@
 var ALARM_NAME = "refreshCurrency";
-var API_ENDPOINT = "http://free.currencyconverterapi.com/api/v5/convert?compact=ultra&q=";
+var API_ENDPOINT = "https://free.currencyconverterapi.com/api/v5/convert?compact=ultra&q=";
 
 function getQueryString(from, to) {
   return from + "_" + to;
@@ -8,6 +8,26 @@ function getQueryString(from, to) {
 function getTitle(from, to) {
   return from + " -> " + to;
 }
+chrome.webRequest.onBeforeSendHeaders.addListener(function(details){
+  var newRef = "https://free.currencyconverterapi.com";
+  var gotRef = false;
+  for(var n in details.requestHeaders){
+      gotRef = details.requestHeaders[n].name.toLowerCase()=="referer";
+      if(gotRef){
+          details.requestHeaders[n].value = newRef;
+          break;
+      }
+  }
+  if(!gotRef){
+      details.requestHeaders.push({name:"Referer",value:newRef});
+  }
+  return {requestHeaders:details.requestHeaders};
+},{
+  urls:["https://free.currencyconverterapi.com/*"]
+},[
+  "requestHeaders",
+  "blocking"
+]);
 
 function updateBadge () {
   var log = "";

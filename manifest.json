@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Exchange Rate",
   "short_name": "ExchangeRate",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Check exchange rate on your toolbar while browsing the web!",
   "author": "Pedro Baracho",
   "icons": {
@@ -11,6 +11,8 @@
     "128": "icons/icon128.png"
   },
   "permissions": [
+    "webRequest",
+    "webRequestBlocking",
     "storage",
     "https://free.currencyconverterapi.com/"
   ],
