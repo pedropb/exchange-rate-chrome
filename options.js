@@ -2,6 +2,7 @@
 function save_options() {
   var from = document.getElementById("from").value;
   var to = document.getElementById("to").value;
+  chrome.storage.remove("lastSuccess");
   chrome.storage.sync.set({
     currencyFrom: from,
     currencyTo: to
